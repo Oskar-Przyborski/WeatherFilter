@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Styles from '../Styles/Home.module.css'
+import Styles from '../styles/Home.module.css'
 
 export default function Home() {
   function shakeHorizontal(element,maxX,shakeTimes) {
