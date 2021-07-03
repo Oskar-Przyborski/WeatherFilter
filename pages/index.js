@@ -31,7 +31,6 @@ export default function Home() {
 }
 
   const search = () => {
-    const alertSpan = document.getElementById("alertSpan")
     let inputVal = document.getElementById("CityName").value
     if(inputVal=="") shakeHorizontal(document.getElementById("CityName"),30,4)
     else window.open(`${window.location.href}weather/${inputVal}`,"_self")
@@ -55,7 +54,6 @@ export default function Home() {
       <div className={"my-5"}>
         <input className={Styles.inputBox}id="CityName" type="text" onKeyDown={handleKeyDown} placeholder="Localization"/><br/>
         <input type="button" onClick={search} className={Styles.searchBtn} value="Get weather!"/><br/>
-        <span id="alertSpan"></span>
       </div>
     </div>
   )
