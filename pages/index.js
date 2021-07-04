@@ -53,7 +53,7 @@ export default function Home() {
       </div>
       <div className={"my-5"}>
         <input className={Styles.inputBox}id="CityName" type="text" onKeyDown={handleKeyDown} placeholder="Localization"/><br/>
-        <input type="button" onClick={search} className={Styles.searchBtn} value="Get weather!"/><br/>
+        <input type="button" onClick={search} className="Btn" value="Get weather!"/><br/>
       </div>
     </div>
   )
