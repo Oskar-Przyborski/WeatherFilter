@@ -3,6 +3,9 @@
   margin:15px;
   text-align: center;
 }
+.WeatherIconImg{
+  filter:drop-shadow(0px 0px 10px rgba(129, 129, 129, 0.705));
+}
 .MainLeft{
   line-height: 25px;
   display: flex;
@@ -27,12 +30,21 @@
   border-radius: 30px;
 }
 .WeatherDaysCarousel{
-  background-color: #f7f7f7;
-  border-radius: 30px;
-  margin: 10px;
-  overflow-x: scroll;
+  cursor: grab;
+  user-select: none;
+  overflow-x: auto;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  align-items: flex-start;
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+.WeatherDaysCarousel::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
+
+.filterPanelContainer{
+  text-align: left;
+  border-radius: 30px;
+  background-color: #f7f7f7;
 }

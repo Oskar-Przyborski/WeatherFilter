@@ -1,3 +1,7 @@
+:root{
+  --mainGray: #c4cee4;
+  --dropShadow: drop-shadow(0px 0px 10px rgba(129, 129, 129, 0.705));
+}
 html,
 body {
   color:#444444;
@@ -26,16 +30,16 @@ textarea:focus, input:focus, button:focus{
   background-color: #fff;
   padding:0.7rem;
   border-radius: 1rem;
-  border:solid rgb(0, 183, 255) 3px;
+  border:solid var(--mainGray) 4px;
   transition: background-color 0.2s;
   color: #000000;
 }
 .Btn:hover{
   color: #000000;
   text-decoration: none;
-  background-color: rgb(0, 183, 255);
+  background-color: var(--mainGray);
 }
 .Btn:focus{
   color: #000000;
-  background-color: rgb(0, 158, 221);
+  background-color: var(--mainGray);
 }

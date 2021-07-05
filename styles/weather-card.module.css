@@ -1,3 +1,10 @@
 .CardContainer{
-    margin:10px
+    text-align: center;
+    padding:10px;
+    margin:10px 15px;
+    background-color: #f7f7f7;
+    border-radius: 30px;
+}
+.Image{
+    filter:var(--dropShadow);
 }
