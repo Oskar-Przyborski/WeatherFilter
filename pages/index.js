@@ -60,7 +60,7 @@ export default function Home() {
 }
 
 export async function getServerSideProps(){
-  console.log("Ktoś wszedł na stronę!")
+  await fetch("https://api.countapi.xyz/hit/hejx3WgYernjXEqcE/siteClicks")
   return {
     props: {},
   }
