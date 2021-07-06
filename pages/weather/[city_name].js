@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Styles from '../../styles/Result.module.css'
 import WeatherCard from '../../Components/weather-card'
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 export default function WeatherSearch({dataWeather,latLonData}) {
   let befPos = 0;
   const dragStart = (event,elemName) =>{
@@ -25,9 +25,11 @@ export default function WeatherSearch({dataWeather,latLonData}) {
     let labelSpanObj = document.getElementById(labelSpan)
     labelSpanObj.innerHTML = e.value
     if(e.id == "filterTemperatureFrom"){
+      SetFilterTemperatureFrom(e.value)
       document.getElementById("filterTemperatureTo").min = e.value
     }
     if(e.id == "filterTemperatureTo"){
+      SetFilterTemperatureTo(e.value)
       document.getElementById("filterTemperatureFrom").max = e.value
     }
   }
@@ -36,8 +38,8 @@ export default function WeatherSearch({dataWeather,latLonData}) {
     let data = {
       "DailyWeather":dataWeather.daily,
       "Filters":{
-        "Temperature":{"From":document.getElementById("filterTemperatureFrom").value,"To":document.getElementById("filterTemperatureTo").value},
-        "WeatherType":document.getElementById("filterWeatherType").value
+        "Temperature":{"From":FilterTemperatureFrom,"To":FilterTemperatureTo},
+        "WeatherTags":WeatherTags
       }
     }
     let response = await fetch("../api/FilterWeather", {
@@ -49,7 +51,24 @@ export default function WeatherSearch({dataWeather,latLonData}) {
     setResultWeather(response)
   }
   
+  const ReloadWeatherTags=(e)=>{
+    const tagsIDS = ["filtersWeatherCheckClear","filtersWeatherCheckClouds","filtersWeatherCheckRain","filtersWeatherCheckDrizzle","filtersWeatherCheckSnow","filtersWeatherCheckThunderstorm","filtersWeatherCheckAtmosphere"]
+    const availableTags = ["Clear","Clouds","Rain","Drizzle","Snow","Thunderstorm","Atmosphere"]
+    let resultTags = []
+    tagsIDS.map((tagID,idx)=>{
+      if(document.getElementById(tagID).checked) resultTags.push(availableTags[idx])
+    })
+    WeatherTags = resultTags
+    getResultWeather()
+  }
+
+  let WeatherTags = ["Clear","Clouds","Rain","Drizzle","Snow","Thunderstorm","Atmosphere"]
   let [resultWeather, setResultWeather] = useState(0)
+
+  let [FilterTemperatureOpen,SetFilterTemperatureOpen] = useState(true)
+  let [FilterTemperatureFrom,SetFilterTemperatureFrom] = useState(-20)
+  let [FilterTemperatureTo,SetFilterTemperatureTo] = useState(40)
+  let [FilterWeatherOpen,SetFilterWeatherOpen] = useState(true)
 
   const getResult = () => {
     if(dataWeather === null) return(<>
@@ -83,45 +102,45 @@ export default function WeatherSearch({dataWeather,latLonData}) {
             })}
           </div>
           {/* here is fitring panel */}
-          <div className={"m-4 p-4 "}>
-            
+          <div className={"my-4 p-3"}>
+            {/* here are filters */}
             <div className="row" style={{fontSize:"23px"}}>
-              <div className={"col-sm-12 col-md-6 my-1 mb-4 p-4 "+Styles.filterPanelContainer}>
-                <span style={{fontWeight:"500",fontSize:"30px"}}>Filter the weather</span>
-                <div>Temperature - from <input style={{width:"60px"}} id="filterTemperatureFrom" type="range" min="-25" max="20" onChange={(e)=>setInputRangeLabel(e,"inputRangeLabelTempFrom")} defaultValue="-5"/> <span id="inputRangeLabelTempFrom">-5</span>°C to <input style={{width:"60px"}} id="filterTemperatureTo" type="range" min="-5" max="50" onChange={(e)=>setInputRangeLabel(e,"inputRangeLabelTempTo")} defaultValue="20"/> <span id="inputRangeLabelTempTo">20</span>°C.</div>
-                <div>Weather type - {" "}
-                  <select id="filterWeatherType"className="Btn" style={{padding:"5px 10px",fontSize:"17px",width:"130px"}} name="weatherList">
-                    <option name="Whatever">Whatever</option>
-                    <option name="Clear">Clear</option>
-                    <option name="Clouds">Clouds</option>
-                    <option name="Rain">Rain</option>
-                    <option name="Thunderstorm">Thunderstorm</option>
-                    <option name="Snow">Snow</option>
-                    <option name="Drizzle">Drizzle</option>
-                    <option name="Mist">Mist</option>
-                    <option name="Smoke">Smoke</option>
-                    <option name="Haze">Haze</option>
-                    <option name="Dust">Dust</option>
-                    <option name="Fog">Fog</option>
-                    <option name="Sand">Sand</option>
-                    <option name="Ash">Ash</option>
-                    <option name="Squall">Squall</option>
-                    <option name="Tornado">Tornado</option>
-                  </select>
-                </div>
-                <button className="Btn" onClick={getResultWeather} style={{padding:"5px 70px",margin:"0"}}>Filter</button>
-              </div>
+              
               <div className={"col-sm-12 col-md-6 my-1"}>
-                <div id="DraggableResultWeather" className={"mx-1 " +Styles.WeatherDaysCarousel} onMouseDown={(e)=>dragStart(e,"DraggableResultWeather")} onMouseUp={()=>dragEnd("DraggableResultWeather")} onMouseLeave={()=>dragEnd("DraggableResultWeather")}>
+                <div className={"p-3 "+Styles.filterPanelContainer}>
+                 <span style={{fontWeight:"500",fontSize:"30px"}} className="my-3">Filter the weather</span>
+                  <div>
+                    <span onClick={()=>SetFilterTemperatureOpen(!FilterTemperatureOpen)}>Temperature {FilterTemperatureOpen ? <i className="fas fa-caret-right"></i> : <i className="fas fa-caret-down"></i>}</span>
+                    {FilterTemperatureOpen ? <div className="ml-3">
+                      from <input style={{width:"60px"}} id="filterTemperatureFrom" type="range" min="-20" max="40" onChange={(e)=>setInputRangeLabel(e,"inputRangeLabelTempFrom")} defaultValue={FilterTemperatureFrom}/> <span id="inputRangeLabelTempFrom">{FilterTemperatureFrom}</span>°C<br/>
+                      to <input style={{width:"60px"}} id="filterTemperatureTo" type="range" min="-20" max="40" onChange={(e)=>setInputRangeLabel(e,"inputRangeLabelTempTo")} defaultValue={FilterTemperatureTo}/> <span id="inputRangeLabelTempTo">{FilterTemperatureTo}</span>°C.
+                    </div>:null} 
+                  </div>
+                  <div>
+                    <span onClick={()=>SetFilterWeatherOpen(!FilterWeatherOpen)}>Weather {FilterWeatherOpen ? <i className="fas fa-caret-right"></i> : <i className="fas fa-caret-down"></i>}</span>
+                    <div className="ml-3" style={FilterWeatherOpen?{display:"block"}:{display:"none"}}>
+                      <input type="checkbox" defaultChecked id="filtersWeatherCheckClear" onChange={(e)=>ReloadWeatherTags(e)}/> <label htmlFor="filtersWeatherCheckClear" style={{margin:"0px"}}>Clear</label> <br/>
+                      <input type="checkbox" defaultChecked id="filtersWeatherCheckClouds" onChange={(e)=>ReloadWeatherTags(e)}/> <label htmlFor="filtersWeatherCheckClouds" style={{margin:"0px"}}>Clouds</label> <br/>
+                      <input type="checkbox" defaultChecked id="filtersWeatherCheckRain" onChange={(e)=>ReloadWeatherTags(e)}/> <label htmlFor="filtersWeatherCheckRain" style={{margin:"0px"}}>Rain</label> <br/>
+                      <input type="checkbox" defaultChecked id="filtersWeatherCheckDrizzle" onChange={(e)=>ReloadWeatherTags(e)}/> <label htmlFor="filtersWeatherCheckDrizzle" style={{margin:"0px"}}>Drizzle</label> <br/>
+                      <input type="checkbox" defaultChecked id="filtersWeatherCheckSnow" onChange={(e)=>ReloadWeatherTags(e)}/> <label htmlFor="filtersWeatherCheckSnow" style={{margin:"0px"}}>Snow</label> <br/>
+                      <input type="checkbox" defaultChecked id="filtersWeatherCheckThunderstorm" onChange={(e)=>ReloadWeatherTags(e)}/> <label htmlFor="filtersWeatherCheckThunderstorm" style={{margin:"0px"}}>Thunderstorm</label> <br/>
+                      <input type="checkbox" defaultChecked id="filtersWeatherCheckAtmosphere" onChange={(e)=>ReloadWeatherTags(e)}/> <label htmlFor="filtersWeatherCheckAtmosphere" style={{margin:"0px"}}>Atmosphere</label> <br/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* here are results of filters */}
+              <div className={"col-sm-12 col-md-6 my-1 p-0"}>
+                <div id="DraggableResultWeather" className={"my-1 " +Styles.WeatherDaysCarousel} onMouseDown={(e)=>dragStart(e,"DraggableResultWeather")} onMouseUp={()=>dragEnd("DraggableResultWeather")} onMouseLeave={()=>dragEnd("DraggableResultWeather")}>
                   {resultWeather ? !resultWeather.isError ? resultWeather.result.map((dayWeather,idx)=>{
                     return(<WeatherCard timezoneOffset={dataWeather.timezone_offset} WeatherData={dayWeather} key={idx}/>)
                   }):<div><span style={{color:"red",fontWeight:"500"}}>ERROR!</span><br/>{resultWeather.errorMessage}</div> : null}
                 </div>
               </div>
-              
+      
             </div>
-            
-            
           </div>
         </>
       )
