@@ -65,10 +65,10 @@ export default function WeatherSearch({dataWeather,latLonData}) {
   let WeatherTags = ["Clear","Clouds","Rain","Drizzle","Snow","Thunderstorm","Atmosphere"]
   let [resultWeather, setResultWeather] = useState(0)
 
-  let [FilterTemperatureOpen,SetFilterTemperatureOpen] = useState(true)
+  let [FilterTemperatureOpen,SetFilterTemperatureOpen] = useState(false)
   let [FilterTemperatureFrom,SetFilterTemperatureFrom] = useState(-20)
   let [FilterTemperatureTo,SetFilterTemperatureTo] = useState(40)
-  let [FilterWeatherOpen,SetFilterWeatherOpen] = useState(true)
+  let [FilterWeatherOpen,SetFilterWeatherOpen] = useState(false)
 
   const getResult = () => {
     if(dataWeather === null) return(<>
@@ -128,6 +128,7 @@ export default function WeatherSearch({dataWeather,latLonData}) {
                       <input type="checkbox" defaultChecked id="filtersWeatherCheckAtmosphere" onChange={(e)=>ReloadWeatherTags(e)}/> <label htmlFor="filtersWeatherCheckAtmosphere" style={{margin:"0px"}}>Atmosphere</label> <br/>
                     </div>
                   </div>
+                  <button className={"Btn px-5 py-2 mx-0"} onClick={getResultWeather}>Filter!</button>
                 </div>
               </div>
 
