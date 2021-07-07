@@ -35,6 +35,7 @@ export default function WeatherSearch({dataWeather,latLonData}) {
   }
  
   const getResultWeather = async () =>{
+    ReloadWeatherTags()
     let data = {
       "DailyWeather":dataWeather.daily,
       "Filters":{
@@ -59,7 +60,6 @@ export default function WeatherSearch({dataWeather,latLonData}) {
       if(document.getElementById(tagID).checked) resultTags.push(availableTags[idx])
     })
     WeatherTags = resultTags
-    getResultWeather()
   }
 
   let WeatherTags = ["Clear","Clouds","Rain","Drizzle","Snow","Thunderstorm","Atmosphere"]
@@ -112,8 +112,8 @@ export default function WeatherSearch({dataWeather,latLonData}) {
                   <div>
                     <span onClick={()=>SetFilterTemperatureOpen(!FilterTemperatureOpen)}>Temperature {FilterTemperatureOpen ? <i className="fas fa-caret-right"></i> : <i className="fas fa-caret-down"></i>}</span>
                     {FilterTemperatureOpen ? <div className="ml-3">
-                      from <input style={{width:"60px"}} id="filterTemperatureFrom" type="range" min="-20" max="40" onChange={(e)=>setInputRangeLabel(e,"inputRangeLabelTempFrom")} defaultValue={FilterTemperatureFrom}/> <span id="inputRangeLabelTempFrom">{FilterTemperatureFrom}</span>°C<br/>
-                      to <input style={{width:"60px"}} id="filterTemperatureTo" type="range" min="-20" max="40" onChange={(e)=>setInputRangeLabel(e,"inputRangeLabelTempTo")} defaultValue={FilterTemperatureTo}/> <span id="inputRangeLabelTempTo">{FilterTemperatureTo}</span>°C.
+                      from <input style={{width:"100px"}} id="filterTemperatureFrom" type="range" min="-20" max="40" onChange={(e)=>setInputRangeLabel(e,"inputRangeLabelTempFrom")} defaultValue={FilterTemperatureFrom}/> <span id="inputRangeLabelTempFrom">{FilterTemperatureFrom}</span>°C<br/>
+                      to <input style={{width:"100px"}} id="filterTemperatureTo" type="range" min="-20" max="40" onChange={(e)=>setInputRangeLabel(e,"inputRangeLabelTempTo")} defaultValue={FilterTemperatureTo}/> <span id="inputRangeLabelTempTo">{FilterTemperatureTo}</span>°C.
                     </div>:null} 
                   </div>
                   <div>
