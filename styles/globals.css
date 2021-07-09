@@ -43,3 +43,29 @@ textarea:focus, input:focus, button:focus{
   color: #000000;
   background-color: var(--mainGray);
 }
+
+.DailyHourBar{
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-size: 1.5em;
+}
+.DailyHourlyChoose {
+  cursor: pointer;
+  margin: 0 1em;
+}
+.DailyHourlyChoose.Active {
+  font-weight: 500;
+}
+.DailyHourlyChoose.Active hr{
+  width: 100%;
+  opacity: 100%;
+}
+.DailyHourlyChoose hr{
+  opacity: 0%;
+  transition: 0.3s;
+  width: 0%;
+  margin:3px 0px;
+  border-top: 3px solid #424242;
+}

@@ -2,7 +2,8 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Styles from '../../styles/Result.module.css'
 import WeatherCard from '../../Components/weather-card'
-import { useState,useEffect } from 'react'
+const { countryCodeEmoji } = require('country-code-emoji');
+import { useEffect, useState } from 'react'
 export default function WeatherSearch({dataWeather,latLonData}) {
   let befPos = 0;
   const dragStart = (event,elemName) =>{
@@ -37,7 +38,8 @@ export default function WeatherSearch({dataWeather,latLonData}) {
   const getResultWeather = async () =>{
     ReloadWeatherTags()
     let data = {
-      "DailyWeather":dataWeather.daily,
+      "DailyWeather":dataWeather[weatherType],
+      "WeatherType":weatherType,
       "Filters":{
         "Temperature":{"From":FilterTemperatureFrom,"To":FilterTemperatureTo},
         "WeatherTags":WeatherTags
@@ -64,11 +66,14 @@ export default function WeatherSearch({dataWeather,latLonData}) {
 
   let WeatherTags = ["Clear","Clouds","Rain","Drizzle","Snow","Thunderstorm","Atmosphere"]
   let [resultWeather, setResultWeather] = useState(0)
+  let [weatherType,setWeatherType] = useState("daily")
 
   let [FilterTemperatureOpen,SetFilterTemperatureOpen] = useState(false)
   let [FilterTemperatureFrom,SetFilterTemperatureFrom] = useState(-20)
   let [FilterTemperatureTo,SetFilterTemperatureTo] = useState(40)
   let [FilterWeatherOpen,SetFilterWeatherOpen] = useState(false)
+
+  useEffect(()=>setResultWeather({isError:false,errorMessage:"",result:[]}),[weatherType])
 
   const getResult = () => {
     if(dataWeather === null) return(<>
@@ -81,7 +86,7 @@ export default function WeatherSearch({dataWeather,latLonData}) {
         {/* here is 2 main panels*/}
           <div className={"row"}>
             <div className={"col-sm-12 col-lg-6 my-4 " + Styles.MainLeft}>
-              <span style={{fontSize:"65px",fontWeight:"500"}}>{latLonData[0].name}, {latLonData[0].country}</span><br/>
+              <span style={{fontSize:"60px",fontWeight:"500",whiteSpace:"nowrap"}}>{countryCodeEmoji(latLonData[0].country)} {latLonData[0].name}</span><br/>
               <div style={{display:"flex",alignItems:"center"}}><span style={{fontSize:"65px"}}>{Math.round(dataWeather.current.temp)}°C</span><img width="128" height="128" src={`http://openweathermap.org/img/wn/${dataWeather.current.weather[0].icon}@4x.png`} className={Styles.WeatherIconImg}/></div><br/>
               <span style={{fontSize:"35px"}}>{dataWeather.current.weather[0].description}</span>
             </div>
@@ -96,17 +101,20 @@ export default function WeatherSearch({dataWeather,latLonData}) {
             </div>
           </div>
           {/* here is daily weather that you can drag*/}
+          <div className={"DailyHourBar"} >
+            <div id="DailyChoose" className={"DailyHourlyChoose Active"} onClick={()=>{setWeatherType("daily");setResultWeather({isError:false,errorMessage:"",result:[]});document.getElementById("HourlyChoose").classList.remove("Active");document.getElementById("DailyChoose").classList.add("Active")}}>daily<hr/></div>|<div id="HourlyChoose" className={"DailyHourlyChoose"} onClick={()=>{setWeatherType("hourly");setResultWeather({isError:false,errorMessage:"",result:[]});document.getElementById("DailyChoose").classList.remove("Active");document.getElementById("HourlyChoose").classList.add("Active")}}>hourly<hr/></div>
+          </div>
           <div id="DraggableDaysWeather" className={Styles.WeatherDaysCarousel} onMouseDown={(e)=>dragStart(e,"DraggableDaysWeather")} onMouseUp={()=>dragEnd("DraggableDaysWeather")} onMouseLeave={()=>dragEnd("DraggableDaysWeather")}>
-            {dataWeather.daily.map((dayWeather,idx)=>{
-              return(<WeatherCard timezoneOffset={dataWeather.timezone_offset} WeatherData={dayWeather} key={idx}/>)
+            {dataWeather[weatherType].map((dayWeather,idx)=>{
+              return(<WeatherCard timezoneOffset={dataWeather.timezone_offset} WeatherData={dayWeather} key={idx} weatherType={weatherType}/>)
             })}
           </div>
           {/* here is fitring panel */}
           <div className={"my-4 p-3"}>
             {/* here are filters */}
-            <div className="row" style={{fontSize:"23px"}}>
+            <div className="row">
               
-              <div className={"col-sm-12 col-md-6 my-1"}>
+              <div className={"col-sm-12 col-md-6 my-1"} style={{fontSize:"20px"}}>
                 <div className={"p-3 "+Styles.filterPanelContainer}>
                  <span style={{fontWeight:"500",fontSize:"30px"}} className="my-3">Filter the weather</span>
                   <div>
@@ -136,7 +144,7 @@ export default function WeatherSearch({dataWeather,latLonData}) {
               <div className={"col-sm-12 col-md-6 my-1 p-0"}>
                 <div id="DraggableResultWeather" className={"my-1 " +Styles.WeatherDaysCarousel} onMouseDown={(e)=>dragStart(e,"DraggableResultWeather")} onMouseUp={()=>dragEnd("DraggableResultWeather")} onMouseLeave={()=>dragEnd("DraggableResultWeather")}>
                   {resultWeather ? !resultWeather.isError ? resultWeather.result.map((dayWeather,idx)=>{
-                    return(<WeatherCard timezoneOffset={dataWeather.timezone_offset} WeatherData={dayWeather} key={idx}/>)
+                    return(<WeatherCard timezoneOffset={dataWeather.timezone_offset} WeatherData={dayWeather} weatherType={weatherType}key={idx}/>)
                   }):<div><span style={{color:"red",fontWeight:"500"}}>ERROR!</span><br/>{resultWeather.errorMessage}</div> : null}
                 </div>
               </div>

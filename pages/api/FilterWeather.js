@@ -1,4 +1,5 @@
 export default (req, res) => {
+  if(!(req.body.WeatherType=="daily" || req.body.WeatherType=="hourly")) {res.status(200).json({"isError":true,"errorMessage":"body.WeatherType is not right!","result":[]});return}
   if(req.body.DailyWeather==null) {res.status(200).json({"isError":true,"errorMessage":"body.DailyWeather is null!","result":[]});return}
   let weather = req.body.DailyWeather
   if(req.body.Filters==null){res.status(200).json({"isError":true,"errorMessage":"body.Filters is null!","result":[]});return}
@@ -9,8 +10,15 @@ export default (req, res) => {
   let result = []
   if(weather.map == null) {res.status(200).json({"isError":true,"errorMessage":"body.DailyWeather is not an array!","result":[]});return}
   weather.map((elem)=>{
-    if(elem.temp.day>=parseInt(filters.Temperature.From) && elem.temp.day<=parseInt(filters.Temperature.To)){
-      if(filters.WeatherTags.includes(elem.weather[0].main)) result.push(elem)
+    if(req.body.WeatherType=="daily"){
+      if(elem.temp.day>=parseInt(filters.Temperature.From) && elem.temp.day<=parseInt(filters.Temperature.To)){
+        if(filters.WeatherTags.includes(elem.weather[0].main)) result.push(elem)
+      }
+    }
+    if(req.body.WeatherType=="hourly"){
+      if(elem.temp>=parseInt(filters.Temperature.From) && elem.temp<=parseInt(filters.Temperature.To)){
+        if(filters.WeatherTags.includes(elem.weather[0].main)) result.push(elem)
+      }
     }
   })
   res.status(200).json({"isError":false,"errorMessage":"","result":result})
