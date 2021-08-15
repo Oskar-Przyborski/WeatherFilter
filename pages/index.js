@@ -46,6 +46,7 @@ export default function Home() {
       <Head>
         <title>WeatherFilter</title>
         <meta name="description" content="Find day by weather with WeatherFilter!" />
+        <meta name="google-site-verification" content="BpXLULK4BfeJOYQOFp5KnOT75L3t_RmEAARBwL77AXA" />
       </Head>
       <div className={"my-5"}>
         <h1>Welcome in WeatherFilter!</h1>

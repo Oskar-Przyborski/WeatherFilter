@@ -1,12 +1,12 @@
 import Styles from '../styles/weather-card.module.css'
-export default function WeatherCard({WeatherData,timezoneOffset,weatherType}){
+export default function WeatherCard({WeatherData,timezoneOffset,timezone,weatherType}){
     function getTemperature(weatherType){
         if(weatherType=="daily") return <>{Math.round(WeatherData.temp.day)}°C / {Math.round(WeatherData.temp.night)}°C</>
         if(weatherType=="hourly") return <>{Math.round(WeatherData.temp)}°C</>
     }
     function getTime(weatherType){
         if(weatherType=="daily") return <>{days[CardDate.getDay()]+" " +CardDate.getDate()}</>
-        if(weatherType=="hourly") return <>{days[CardDate.getDay()]+" " +CardDate.getDate()}<br/>{CardDate.toLocaleTimeString('en-US', {hour: '2-digit',minute:'2-digit'})}</>
+        if(weatherType=="hourly") return <>{days[CardDate.getDay()]+" " +CardDate.getDate()}<br/>{CardDate.toLocaleTimeString('US-us', {hour: '2-digit',minute:'2-digit',timeZone: timezone})}</>
     }
     let CardDate = new Date((WeatherData.dt+timezoneOffset)*1000)
     const days = ["Sun.","Mon.","Tue.","Wed.","Thu.","Fri.","Sat."]

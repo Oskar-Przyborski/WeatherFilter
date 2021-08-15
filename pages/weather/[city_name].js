@@ -106,7 +106,7 @@ export default function WeatherSearch({dataWeather,latLonData}) {
           </div>
           <div id="DraggableDaysWeather" className={Styles.WeatherDaysCarousel} onMouseDown={(e)=>dragStart(e,"DraggableDaysWeather")} onMouseUp={()=>dragEnd("DraggableDaysWeather")} onMouseLeave={()=>dragEnd("DraggableDaysWeather")}>
             {dataWeather[weatherType].map((dayWeather,idx)=>{
-              return(<WeatherCard timezoneOffset={dataWeather.timezone_offset} WeatherData={dayWeather} key={idx} weatherType={weatherType}/>)
+              return(<WeatherCard timezone={dataWeather.timezone} timezoneOffset={dataWeather.timezone_offset} WeatherData={dayWeather} key={idx} weatherType={weatherType}/>)
             })}
           </div>
           {/* here is fitring panel */}
