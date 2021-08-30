@@ -174,13 +174,13 @@ export default function WeatherSearch({dataWeather,latLonData}) {
 export async function getServerSideProps(context) {
   //get lat and lon
   let dataWeather = null
-  let latLonData = await fetch(encodeURI(`http://api.openweathermap.org/geo/1.0/direct?q=${context.query.city_name}&limit=1&appid=187db54233cfd9ab55e609decd15cc0d`))
+  let latLonData = await fetch(encodeURI(`http://api.openweathermap.org/geo/1.0/direct?q=${context.query.city_name}&limit=1&appid=${process.env.OpenWeatherApiKey}`))
   latLonData = await latLonData.json()
   if(latLonData[0] == null) return {props: {dataWeather,latLonData}} 
   let lat = latLonData[0].lat
   let lon = latLonData[0].lon
   //get weather
-  dataWeather = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&appid=187db54233cfd9ab55e609decd15cc0d`)
+  dataWeather = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.OpenWeatherApiKey}`)
   dataWeather = await dataWeather.json()
   return {
     props: {dataWeather,latLonData}
